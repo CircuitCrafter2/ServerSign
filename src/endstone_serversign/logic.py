@@ -1,4 +1,4 @@
-"""Logique pure de ServerSign (aucune dépendance à Endstone) : stockage et commandes."""
+"""Pure logic for ServerSign (no Endstone dependency): storage and commands."""
 
 from __future__ import annotations
 
@@ -27,14 +27,14 @@ def make_key(dimension: str, x: int, y: int, z: int) -> str:
 
 
 def clean_commands(raw: Iterable[object], limit: int = 3) -> tuple[list[str], int]:
-    """Nettoie les commandes saisies.
+    """Cleans entered commands.
 
-    - retire le "/" initial et les blancs ;
-    - ignore les lignes vides ;
-    - rejette les commandes contenant des caractères de contrôle (ex. retour à la ligne),
-      qui permettraient d'enchaîner plusieurs commandes dans un seul champ.
+    - removes initial '/' and whitespace;
+    - ignores empty lines;
+    - rejects commands containing control characters (e.g. line breaks),
+      which would allow chaining multiple commands in a single field.
 
-    Retourne (commandes valides, nombre de commandes rejetées).
+    Returns (valid commands, number of rejected commands).
     """
     valid: list[str] = []
     rejected = 0
@@ -52,7 +52,7 @@ def clean_commands(raw: Iterable[object], limit: int = 3) -> tuple[list[str], in
 
 
 def render_command(template: str, player_name: str) -> str:
-    """Remplace {player} ; les pseudos Bedrock peuvent contenir des espaces -> on les met entre guillemets."""
+    """Replaces {player}; Bedrock usernames can contain spaces -> wrap them in quotes."""
     name = player_name.replace('"', "")
     if " " in name:
         name = f'"{name}"'
@@ -60,7 +60,7 @@ def render_command(template: str, player_name: str) -> str:
 
 
 class SignStore:
-    """Registre des panneaux ServerSign, persisté en JSON (écriture atomique)."""
+    """Registry of ServerSign signs, persisted in JSON (atomic write)."""
 
     def __init__(self, path: Path | str):
         self.path = Path(path)
@@ -85,21 +85,21 @@ class SignStore:
         return list(self._entries.items())
 
     def load(self) -> str | None:
-        """Charge le fichier. Retourne un message d'avertissement si le fichier était illisible."""
+        """Loads the file. Returns a warning message if the file was unreadable."""
         self._entries = {}
         if not self.path.exists():
             return None
         try:
             raw = json.loads(self.path.read_text(encoding="utf-8"))
             if not isinstance(raw, dict):
-                raise ValueError("la racine doit être un objet JSON")
+                raise ValueError("root must be a JSON object")
         except (OSError, ValueError) as exc:
             backup = self.path.with_name(f"{self.path.name}.corrupt-{int(time.time())}")
             try:
                 os.replace(self.path, backup)
             except OSError:
                 pass
-            return f"{self.path.name} illisible ({exc}) ; copie conservée sous {backup.name}, registre vide."
+            return f"{self.path.name} unreadable ({exc}); copy kept as {backup.name}, empty registry."
 
         for key, value in raw.items():
             if not isinstance(value, dict) or not isinstance(value.get("commands"), list):
@@ -107,7 +107,7 @@ class SignStore:
             commands, _ = clean_commands([c for c in value["commands"] if isinstance(c, str)], limit=50)
             executor = value.get("executor")
             if executor not in VALID_EXECUTORS:
-                executor = EXECUTOR_PLAYER  # jamais d'élévation implicite vers la console
+                executor = EXECUTOR_PLAYER  # never implicitly elevate to console
             if commands:
                 self._entries[str(key)] = SignEntry(commands, executor, str(value.get("owner", "")))
         return None

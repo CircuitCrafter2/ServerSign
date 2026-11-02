@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "endstone-serversign"
 version = "0.1.2"
-description = "Panneaux cliquables qui exécutent des commandes (joueur ou console) pour Endstone"
+description = "Clickable signs that execute commands, for Endstone."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []

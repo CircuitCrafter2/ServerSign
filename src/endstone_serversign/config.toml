@@ -1,6 +1,6 @@
-# "toggle" : un créateur tape /serversign create avant de poser ou toucher un panneau.
-# "always" : tout joueur ayant serversign.create voit le formulaire à chaque édition de panneau.
+# "toggle": a creator types /serversign create before placing or touching a sign.
+# "always": any player with serversign.create sees the form every time a sign is edited.
 creation_mode = "toggle"
 
-# Délai minimal (ms) entre deux clics d'un même joueur sur un même panneau.
+# Minimum cooldown (ms) between two clicks by the same player on the same sign.
 cooldown_ms = 1000
