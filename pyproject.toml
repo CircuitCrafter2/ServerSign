@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "endstone-serversign"
+version = "0.1.2"
+description = "Panneaux cliquables qui exécutent des commandes (joueur ou console) pour Endstone"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["endstone"]
+
+[project.entry-points."endstone"]
+serversign = "endstone_serversign:ServerSignPlugin"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/endstone_serversign"]

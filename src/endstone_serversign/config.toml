@@ -1,0 +1,6 @@
+# "toggle" : un créateur tape /serversign create avant de poser ou toucher un panneau.
+# "always" : tout joueur ayant serversign.create voit le formulaire à chaque édition de panneau.
+creation_mode = "toggle"
+
+# Délai minimal (ms) entre deux clics d'un même joueur sur un même panneau.
+cooldown_ms = 1000
